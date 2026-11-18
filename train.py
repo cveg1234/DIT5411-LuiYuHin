@@ -135,11 +135,20 @@ def main():
 
         start_epoch, history = 0, {'accuracy': [], 'val_accuracy': []}
         if args.resume and os.path.isfile(ckpt_path) and os.path.isfile(state_path):
-            model = keras.models.load_model(ckpt_path)
-            state = json.load(open(state_path, encoding='utf-8'))
-            start_epoch = int(state['completed_epochs'])
-            history = state.get('history', history)
-            print(f'  Resuming from epoch {start_epoch + 1}', flush=True)
+            candidate = keras.models.load_model(ckpt_path)
+            ckpt_classes = candidate.output_shape[-1]
+            if ckpt_classes == num_classes:
+                model = candidate
+                state = json.load(open(state_path, encoding='utf-8'))
+                start_epoch = int(state['completed_epochs'])
+                history = state.get('history', history)
+                print(f'  Resuming from epoch {start_epoch + 1}', flush=True)
+            else:
+                print(f'  Ignoring checkpoint: {ckpt_classes} classes, '
+                      f'need {num_classes}. Starting fresh.', flush=True)
+                del candidate
+                weights = None if (name == 'C' and args.no_imagenet) else 'imagenet'
+                model = get_model(name, num_classes, args.img_size, weights=weights)
         else:
             weights = None if (name == 'C' and args.no_imagenet) else 'imagenet'
             model = get_model(name, num_classes, args.img_size, weights=weights)
