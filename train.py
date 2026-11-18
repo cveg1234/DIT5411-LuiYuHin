@@ -44,6 +44,9 @@ def parse_args():
                    help='Which models to train: A B C')
     p.add_argument('--no-imagenet', action='store_true',
                    help='Model C uses random weights instead of downloading ImageNet')
+    p.add_argument('--steps-per-epoch', type=int, default=None,
+                   help='Cap steps per epoch (e.g. 3000). Prevents Colab free-tier '
+                        'disconnect mid-epoch; still keeps 200 augmented samples/class.')
     p.add_argument('--seed', type=int, default=42)
     return p.parse_args()
 
@@ -113,6 +116,7 @@ def main():
             train_gen,
             epochs=args.epochs,
             validation_data=test_gen,
+            steps_per_epoch=args.steps_per_epoch,
             verbose=1,
         )
         loss, acc = model.evaluate(test_gen, verbose=0)
