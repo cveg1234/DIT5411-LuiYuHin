@@ -111,8 +111,12 @@ python train.py --epochs 15
 python predict.py --image sample.png --model results/model_A.keras
 ```
 
-Google Colab is also supported — open `notebooks/DIT5411_Colab.ipynb`, enable
-a GPU (`Runtime → Change runtime type → T4 GPU`), and run the cells in order.
+Google Colab is also supported. Use **`notebooks/DIT5411_Drive.ipynb`** — it mounts
+Google Drive and stores the dataset, checkpoints and results under
+`MyDrive/DIT5411/`, so they survive runtime resets and GPU-quota cutoffs. Enable
+a GPU (`Runtime → Change runtime type → T4 GPU`), run the setup cell once, then
+run the training cell. If the session dies, run the setup cell again (remounts
+Drive) and the training cell with `--resume` to continue from the last saved epoch.
 
 ---
 

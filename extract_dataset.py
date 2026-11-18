@@ -1,11 +1,15 @@
 """Extract the Big5-encoded dataset zip with correct Chinese filenames."""
+import argparse
 import os
 import sys
 import zipfile
 
-ZIP = r'C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin\data\handwritting_data_all\all_data.zip'
-DEST = r'C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin\data\cleaned_data'
+p = argparse.ArgumentParser()
+p.add_argument('--zip', default=r'C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin\data\handwritting_data_all\all_data.zip')
+p.add_argument('--dest', default=r'C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin\data\cleaned_data')
+args = p.parse_args()
 
+ZIP, DEST = args.zip, args.dest
 os.makedirs(DEST, exist_ok=True)
 z = zipfile.ZipFile(ZIP)
 infos = z.infolist()
