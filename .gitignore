@@ -2,6 +2,9 @@
 __pycache__/
 *.pyc
 data/
-results/*.keras
-results/*.h5
+results/
+results_pilot/
+.ipynb_checkpoints/
+*.keras
+*.h5
 .DS_Store
