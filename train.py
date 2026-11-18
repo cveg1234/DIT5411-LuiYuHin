@@ -47,8 +47,32 @@ def parse_args():
     p.add_argument('--steps-per-epoch', type=int, default=None,
                    help='Cap steps per epoch (e.g. 3000). Prevents Colab free-tier '
                         'disconnect mid-epoch; still keeps 200 augmented samples/class.')
+    p.add_argument('--resume', action='store_true',
+                   help='Resume each model from its latest saved checkpoint.')
     p.add_argument('--seed', type=int, default=42)
     return p.parse_args()
+
+
+class EpochCheckpoint(keras.callbacks.Callback):
+    """Save model + completed-epoch count after every epoch so a Colab
+    disconnect never loses more than the current (partial) epoch."""
+
+    def __init__(self, model_path, state_path, history):
+        super().__init__()
+        self.model_path = model_path
+        self.state_path = state_path
+        self.history = history
+
+    def on_epoch_end(self, epoch, logs=None):
+        self.model.save(self.model_path)
+        self.history['accuracy'].append(round(float(logs['accuracy']), 5))
+        self.history['val_accuracy'].append(round(float(logs['val_accuracy']), 5))
+        with open(self.state_path, 'w', encoding='utf-8') as f:
+            json.dump({
+                'completed_epochs': epoch + 1,
+                'history': self.history,
+            }, f, indent=2)
+        print(f"  [checkpoint saved: epoch {epoch + 1}]", flush=True)
 
 
 def main():
@@ -104,21 +128,39 @@ def main():
         name = name.upper()
         print(f'\n--- Model {name} ---', flush=True)
         t0 = time.time()
-        weights = None if (name == 'C' and args.no_imagenet) else 'imagenet'
-        model = get_model(name, num_classes, args.img_size, weights=weights)
+        ckpt_dir = os.path.join(args.output_dir, 'checkpoints')
+        os.makedirs(ckpt_dir, exist_ok=True)
+        ckpt_path = os.path.join(ckpt_dir, f'model_{name}_latest.keras')
+        state_path = os.path.join(ckpt_dir, f'model_{name}_state.json')
+
+        start_epoch, history = 0, {'accuracy': [], 'val_accuracy': []}
+        if args.resume and os.path.isfile(ckpt_path) and os.path.isfile(state_path):
+            model = keras.models.load_model(ckpt_path)
+            state = json.load(open(state_path, encoding='utf-8'))
+            start_epoch = int(state['completed_epochs'])
+            history = state.get('history', history)
+            print(f'  Resuming from epoch {start_epoch + 1}', flush=True)
+        else:
+            weights = None if (name == 'C' and args.no_imagenet) else 'imagenet'
+            model = get_model(name, num_classes, args.img_size, weights=weights)
+
         model.summary()
         model.compile(
             optimizer=keras.optimizers.Adam(1e-3),
             loss='categorical_crossentropy',
             metrics=['accuracy'],
         )
+        epoch_cb = EpochCheckpoint(ckpt_path, state_path, history)
         history = model.fit(
             train_gen,
+            initial_epoch=start_epoch,
             epochs=args.epochs,
             validation_data=test_gen,
             steps_per_epoch=args.steps_per_epoch,
+            callbacks=[epoch_cb],
             verbose=1,
         )
+        history_acc = epoch_cb.history
         loss, acc = model.evaluate(test_gen, verbose=0)
         elapsed = time.time() - t0
         model_path = os.path.join(args.output_dir, f'model_{name}.keras')
@@ -130,8 +172,8 @@ def main():
             'test_loss': round(float(loss), 6),
             'training_time_s': round(elapsed, 1),
             'history': {
-                'accuracy': [round(float(x), 5) for x in history.history['accuracy']],
-                'val_accuracy': [round(float(x), 5) for x in history.history['val_accuracy']],
+                'accuracy': [round(float(x), 5) for x in history_acc['accuracy']],
+                'val_accuracy': [round(float(x), 5) for x in history_acc['val_accuracy']],
             },
             'saved_at': model_path,
         }
