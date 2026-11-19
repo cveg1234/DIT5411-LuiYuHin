@@ -123,6 +123,23 @@ def main():
         'models': [],
     }
 
+    # Merge with previous results so training models in separate cells/runs
+    # accumulates all models into one comparison table instead of overwriting.
+    results_path = os.path.join(args.output_dir, 'results.json')
+    if os.path.isfile(results_path):
+        try:
+            with open(results_path, encoding='utf-8') as f:
+                prev = json.load(f)
+            existing = {m['model']: m for m in results['models']}
+            for m in prev.get('models', []):
+                if m['model'] not in existing:
+                    results['models'].append(m)
+                    existing[m['model']] = m
+            n_prior = len(prev.get('models', []))
+            print(f'      Loaded {n_prior} prior model result(s)', flush=True)
+        except Exception:
+            pass
+
     print('[3/4] Training models...', flush=True)
     for name in args.models:
         name = name.upper()
