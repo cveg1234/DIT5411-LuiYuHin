@@ -20,6 +20,7 @@ os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
+from tqdm import tqdm
 
 from dataset import split_dataset, save_label_map
 from generators import HandwritingSequence
@@ -55,6 +56,33 @@ def parse_args():
                    help='Cap validation steps (faster per epoch).')
     p.add_argument('--seed', type=int, default=42)
     return p.parse_args()
+
+
+class TqdmProgress(keras.callbacks.Callback):
+    """Live tqdm progress bar that renders in Kaggle/Colab notebook output."""
+
+    def __init__(self, total_steps):
+        super().__init__()
+        self.total_steps = total_steps
+        self.bar = None
+        self.epoch = 0
+
+    def on_epoch_begin(self, epoch, logs=None):
+        self.epoch = epoch + 1
+        self.bar = tqdm(total=self.total_steps, desc=f"Epoch {self.epoch}",
+                        unit="step", ncols=80, position=0, leave=True)
+
+    def on_train_batch_end(self, batch, logs=None):
+        if self.bar is not None:
+            logs = logs or {}
+            self.bar.set_postfix(loss=f"{logs.get('loss', 0):.4f}",
+                                 acc=f"{logs.get('accuracy', 0)*100:.1f}%")
+            self.bar.update(1)
+
+    def on_epoch_end(self, epoch, logs=None):
+        if self.bar is not None:
+            self.bar.close()
+            self.bar = None
 
 
 class ProgressPrinter(keras.callbacks.Callback):
@@ -204,6 +232,7 @@ def main():
             metrics=['accuracy'],
         )
         epoch_cb = EpochCheckpoint(ckpt_path, state_path, history)
+        steps_each = args.steps_per_epoch or len(train_gen)
         history = model.fit(
             train_gen,
             initial_epoch=start_epoch,
@@ -211,7 +240,8 @@ def main():
             validation_data=test_gen,
             validation_steps=args.validation_steps,
             steps_per_epoch=args.steps_per_epoch,
-            callbacks=[epoch_cb, ProgressPrinter(every=100)],
+            callbacks=[epoch_cb, TqdmProgress(steps_each),
+                       ProgressPrinter(every=100)],
             verbose=1,
         )
         history_acc = epoch_cb.history
