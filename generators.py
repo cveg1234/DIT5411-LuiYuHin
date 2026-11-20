@@ -17,6 +17,7 @@ class HandwritingSequence(Sequence):
         records: list of (image_path, label_index) for ORIGINAL samples.
         factor:  how many versions to yield per original (5 for training, 1 for test).
         """
+        super().__init__()  # required by Keras Sequence; silences PyDataset warning
         self.records = records
         self.batch_size = batch_size
         self.num_classes = num_classes
