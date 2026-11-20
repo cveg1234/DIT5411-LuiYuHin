@@ -1,0 +1,20 @@
+{
+  "assignment": "DIT5411 Character Recognition",
+  "num_classes": 13065,
+  "img_size": 128,
+  "num_train_per_char": 40,
+  "augment_factor": 5,
+  "train_samples_augmented": 2610420,
+  "test_samples": 156000,
+  "epochs": 1,
+  "models": [
+    {
+      "model": "A",
+      "test_accuracy": 0.7199,
+      "test_loss": 1.1135,
+      "training_time_s": 6602.0
+    }
+  ],
+  "best_model": "A",
+  "best_accuracy": 0.7199
+}

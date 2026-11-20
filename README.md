@@ -83,13 +83,18 @@ All models use Adam (lr 1e-3) and categorical cross-entropy.
 
 ## 4. Results
 
-`train.py` writes `results/results.json` and `results/RESULTS.md`; the full
-comparison table is generated there after the real dataset has been trained.
-The best model is selected by test accuracy.
+Full-step training at 128px (1 epoch, 20,394 steps over 2,610,420 augmented
+images). Test accuracy is measured on ~12 held-out samples per character.
 
-> Note: TensorFlow ≥2.11 has no native GPU support on Windows. For the full
-> 13,065-class run use **Google Colab (T4 GPU)** or **WSL2** with CUDA. Native
-> Windows CPU training is only suitable for the small pilot run.
+| Model | Test Accuracy | Test Loss | Time (s) |
+|---|---|---|---|
+| A | 71.99% | 1.1135 | 6602 |
+
+**Best model: A (71.99%)** — random guessing would be 0.01% (1/13,065), so the
+model learned genuine character-discriminative features.
+
+> Note: TensorFlow ≥2.11 has no native GPU support on Windows. Training was run
+> on Kaggle with a GPU; native Windows CPU is only suitable for the pilot run.
 
 ---
 
