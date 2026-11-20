@@ -61,14 +61,17 @@ class ProgressPrinter(keras.callbacks.Callback):
     """Print a plain progress line every N steps so it is always visible
     in Kaggle/Colab output (Keras' animated bar often does not render)."""
 
-    def __init__(self, every=500):
+    def __init__(self, every=100):
         super().__init__()
         self.every = every
 
+    def on_epoch_begin(self, epoch, logs=None):
+        print(f"    ===== EPOCH {epoch + 1} STARTED =====", flush=True)
+
     def on_train_batch_end(self, batch, logs=None):
         step = batch + 1
-        if step % self.every == 0:
-            logs = logs or {}
+        logs = logs or {}
+        if step == 1 or step % self.every == 0:
             print(f"    step {step} - loss {logs.get('loss', 0):.4f} - "
                   f"acc {logs.get('accuracy', 0)*100:.2f}%", flush=True)
 
@@ -208,7 +211,7 @@ def main():
             validation_data=test_gen,
             validation_steps=args.validation_steps,
             steps_per_epoch=args.steps_per_epoch,
-            callbacks=[epoch_cb, ProgressPrinter(every=max(1, (args.steps_per_epoch or 20000) // 10))],
+            callbacks=[epoch_cb, ProgressPrinter(every=100)],
             verbose=1,
         )
         history_acc = epoch_cb.history
