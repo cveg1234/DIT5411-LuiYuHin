@@ -10,9 +10,15 @@ import os
 import sys
 
 DEST_DIR = "results/checkpoints"
+
+# Kaggle input paths (model attached as Input) first, then local/working dir.
+KAGGLE_BASE = ("/kaggle/input/models/cveg1234/"
+               "dit5411-chinese-character-recognition/tensorflow2/default/1")
 SOURCES = [
-    ("A", ["model_A.keras", "uploads/model_A.keras", "backup/model_A.keras"]),
-    ("B", ["model_B.keras", "uploads/model_B.keras", "backup/model_B.keras"]),
+    ("A", [f"{KAGGLE_BASE}/model_A.keras",
+           "model_A.keras", "uploads/model_A.keras", "backup/model_A.keras"]),
+    ("B", [f"{KAGGLE_BASE}/model_B.keras",
+           "model_B.keras", "uploads/model_B.keras", "backup/model_B.keras"]),
 ]
 
 # If the uploaded results file exists, use its accuracies as history seed.
