@@ -242,7 +242,7 @@ def main():
             steps_per_epoch=args.steps_per_epoch,
             callbacks=[epoch_cb, TqdmProgress(steps_each),
                        ProgressPrinter(every=100)],
-            verbose=1,
+            verbose=0,   # Keras' own bar fights tqdm for the same output line
         )
         history_acc = epoch_cb.history
         loss, acc = model.evaluate(test_gen, verbose=0,
