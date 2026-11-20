@@ -54,6 +54,8 @@ def parse_args():
                    help='Use mixed_float16 (much faster on T4 GPU).')
     p.add_argument('--validation-steps', type=int, default=None,
                    help='Cap validation steps (faster per epoch).')
+    p.add_argument('--lr', type=float, default=1e-3,
+                   help='Adam learning rate (default 1e-3; use 3e-4 for deep Model B).')
     p.add_argument('--seed', type=int, default=42)
     return p.parse_args()
 
@@ -227,7 +229,7 @@ def main():
 
         model.summary()
         model.compile(
-            optimizer=keras.optimizers.Adam(1e-3),
+            optimizer=keras.optimizers.Adam(args.lr),
             loss='categorical_crossentropy',
             metrics=['accuracy'],
         )
