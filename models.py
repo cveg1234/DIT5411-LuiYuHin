@@ -8,7 +8,9 @@ from tensorflow.keras import layers
 
 
 def _finalize(x, num_classes):
-    x = layers.Dense(num_classes, activation='softmax', name='output')(x)
+    # float32 output keeps softmax numerically stable under mixed precision
+    x = layers.Dense(num_classes, activation='softmax', name='output',
+                     dtype='float32')(x)
     return x
 
 

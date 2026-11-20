@@ -49,6 +49,10 @@ def parse_args():
                         'disconnect mid-epoch; still keeps 200 augmented samples/class.')
     p.add_argument('--resume', action='store_true',
                    help='Resume each model from its latest saved checkpoint.')
+    p.add_argument('--mixed-precision', action='store_true',
+                   help='Use mixed_float16 (much faster on T4 GPU).')
+    p.add_argument('--validation-steps', type=int, default=None,
+                   help='Cap validation steps (faster per epoch).')
     p.add_argument('--seed', type=int, default=42)
     return p.parse_args()
 
@@ -79,6 +83,10 @@ def main():
     args = parse_args()
     np.random.seed(args.seed)
     tf.random.set_seed(args.seed)
+    if args.mixed_precision:
+        from tensorflow.keras import mixed_precision
+        mixed_precision.set_global_policy('mixed_float16')
+        print('      Mixed precision: mixed_float16', flush=True)
     os.makedirs(args.output_dir, exist_ok=True)
 
     print('[1/4] Splitting dataset...', flush=True)
@@ -182,12 +190,14 @@ def main():
             initial_epoch=start_epoch,
             epochs=args.epochs,
             validation_data=test_gen,
+            validation_steps=args.validation_steps,
             steps_per_epoch=args.steps_per_epoch,
             callbacks=[epoch_cb],
             verbose=1,
         )
         history_acc = epoch_cb.history
-        loss, acc = model.evaluate(test_gen, verbose=0)
+        loss, acc = model.evaluate(test_gen, verbose=0,
+                                   steps=args.validation_steps)
         elapsed = time.time() - t0
         model_path = os.path.join(args.output_dir, f'model_{name}.keras')
         model.save(model_path)
