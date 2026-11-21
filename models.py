@@ -38,10 +38,23 @@ def _conv_block(x, filters):
 
 
 def build_model_b(num_classes, img_size=128):
-    """Model B - MLP baseline (no convolutions).
+    """Model B - deep CNN (plain, no BatchNorm), 4 blocks, Flatten head."""
+    inputs = keras.Input(shape=(img_size, img_size, 3))
+    x = _conv_block(inputs, 32)
+    x = _conv_block(x, 64)
+    x = _conv_block(x, 128)
+    x = _conv_block(x, 256)
+    x = layers.Flatten()(x)
+    x = layers.Dense(512, activation='relu')(x)
+    x = layers.Dropout(0.3)(x)
+    outputs = _finalize(x, num_classes)
+    return keras.Model(inputs, outputs, name='model_b_deep_cnn')
 
-    Flattens the image and stacks Dense layers. Deliberately simpler than the
-    CNN (Model A) so the comparison shows what convolution contributes.
+
+def build_model_c(num_classes, img_size=128, weights='imagenet'):
+    """Model C - MLP baseline (no convolutions).
+
+    weights accepted but unused (shared get_model signature); starts from scratch.
     """
     inputs = keras.Input(shape=(img_size, img_size, 3))
     x = layers.Flatten()(inputs)
@@ -50,26 +63,7 @@ def build_model_b(num_classes, img_size=128):
     x = layers.Dense(512, activation='relu')(x)
     x = layers.Dropout(0.2)(x)
     outputs = _finalize(x, num_classes)
-    return keras.Model(inputs, outputs, name='model_b_mlp')
-
-
-def build_model_c(num_classes, img_size=128, weights='imagenet'):
-    """Model C - MobileNetV2 transfer learning."""
-    base = keras.applications.MobileNetV2(
-        input_shape=(img_size, img_size, 3),
-        include_top=False,
-        weights=weights,
-        pooling=None,
-    )
-    base.trainable = False
-    inputs = base.input
-    x = base.output
-    x = layers.GlobalAveragePooling2D()(x)
-    x = layers.Dropout(0.3)(x)
-    x = layers.Dense(1024, activation='relu')(x)
-    x = layers.Dropout(0.3)(x)
-    outputs = _finalize(x, num_classes)
-    return keras.Model(inputs, outputs, name='model_c_mobilenetv2')
+    return keras.Model(inputs, outputs, name='model_c_mlp')
 
 
 MODEL_BUILDERS = {

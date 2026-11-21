@@ -74,8 +74,8 @@ All three models end with a `Dense(13_065, activation='softmax')` output layer.
 | Model | Architecture |
 |---|---|
 | **A — Simple CNN** | Conv2D(32) → Pool → Conv2D(64) → Pool → Flatten → Dense(512) → Dropout(0.3) → Output |
-| **B — MLP baseline** | Flatten → Dense(1024) → Dropout(0.2) → Dense(512) → Dropout(0.2) → Output. No convolutions — a baseline showing what the CNN's spatial filters add. |
-| **C — Transfer learning** | MobileNetV2 (ImageNet weights, frozen) → GlobalAveragePooling → Dropout(0.3) → Dense(1024) → Dropout(0.3) → Output |
+| **B — Deep CNN** | Four `Conv→Conv→Pool` blocks (32/64/128/256 filters), Flatten → Dense(512) → Dropout(0.3) → Output. No BatchNorm (unstable here). |
+| **C — MLP baseline** | Flatten → Dense(1024) → Dropout(0.2) → Dense(512) → Dropout(0.2) → Output. No convolutions — baseline showing what the CNN's spatial filters add. |
 
 All models use Adam (lr 1e-3) and categorical cross-entropy.
 
