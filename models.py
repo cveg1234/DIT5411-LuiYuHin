@@ -29,30 +29,24 @@ def build_model_a(num_classes, img_size=128):
 
 
 def _conv_block(x, filters):
-    x = layers.Conv2D(filters, 3, padding='same', use_bias=False)(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = layers.Conv2D(filters, 3, padding='same', use_bias=False)(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
+    # Plain Conv->ReLU->Pool (no BatchNorm: it was unstable on this 13k-class
+    # dataset with a Python generator and small per-class sample count).
+    x = layers.Conv2D(filters, 3, padding='same', activation='relu')(x)
+    x = layers.Conv2D(filters, 3, padding='same', activation='relu')(x)
     x = layers.MaxPooling2D(2)(x)
     return x
 
 
 def build_model_b(num_classes, img_size=128):
-    """Model B - deeper CNN with batch normalisation and dropout."""
+    """Model B - deeper plain CNN (no BatchNorm), 4 blocks, Flatten head."""
     inputs = keras.Input(shape=(img_size, img_size, 3))
     x = _conv_block(inputs, 32)
-    x = layers.Dropout(0.15)(x)
     x = _conv_block(x, 64)
-    x = layers.Dropout(0.20)(x)
     x = _conv_block(x, 128)
-    x = layers.Dropout(0.25)(x)
     x = _conv_block(x, 256)
-    x = layers.Dropout(0.30)(x)
-    x = layers.GlobalAveragePooling2D()(x)
-    x = layers.Dense(1024, activation='relu')(x)
-    x = layers.Dropout(0.40)(x)
+    x = layers.Flatten()(x)
+    x = layers.Dense(512, activation='relu')(x)
+    x = layers.Dropout(0.3)(x)
     outputs = _finalize(x, num_classes)
     return keras.Model(inputs, outputs, name='model_b_deep_cnn')
 
