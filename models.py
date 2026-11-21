@@ -38,17 +38,19 @@ def _conv_block(x, filters):
 
 
 def build_model_b(num_classes, img_size=128):
-    """Model B - deeper plain CNN (no BatchNorm), 4 blocks, Flatten head."""
+    """Model B - MLP baseline (no convolutions).
+
+    Flattens the image and stacks Dense layers. Deliberately simpler than the
+    CNN (Model A) so the comparison shows what convolution contributes.
+    """
     inputs = keras.Input(shape=(img_size, img_size, 3))
-    x = _conv_block(inputs, 32)
-    x = _conv_block(x, 64)
-    x = _conv_block(x, 128)
-    x = _conv_block(x, 256)
-    x = layers.Flatten()(x)
+    x = layers.Flatten()(inputs)
+    x = layers.Dense(1024, activation='relu')(x)
+    x = layers.Dropout(0.2)(x)
     x = layers.Dense(512, activation='relu')(x)
-    x = layers.Dropout(0.3)(x)
+    x = layers.Dropout(0.2)(x)
     outputs = _finalize(x, num_classes)
-    return keras.Model(inputs, outputs, name='model_b_deep_cnn')
+    return keras.Model(inputs, outputs, name='model_b_mlp')
 
 
 def build_model_c(num_classes, img_size=128, weights='imagenet'):
