@@ -158,7 +158,7 @@ DIT5411-LuiYuHin/
 ├── predict.py           # single-image inference
 ├── requirements.txt
 ├── notebooks/
-│   └── DIT5411_Colab.ipynb
+│   └── DIT5411_Kaggle.ipynb   # training notebook (Kaggle GPU)
 └── results/             # generated: label_map.json, results.json, RESULTS.md, models
 ```
 
