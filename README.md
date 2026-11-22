@@ -95,6 +95,9 @@ images). Test accuracy is measured on ~12 held-out samples per character.
 model learned genuine character-discriminative features. Model B (deep CNN)
 failed to converge on this dataset and is included as a negative comparison.
 
+Model A improved from 71.99% (after 1 epoch) to 82.99% after a second epoch of
+continued training, confirming the extra epoch helped.
+
 > Note: TensorFlow ≥2.11 has no native GPU support on Windows. Training was run
 > on Kaggle with a GPU; native Windows CPU is only suitable for the pilot run.
 

@@ -11,3 +11,6 @@
 | B | 0.07% | 22.2270 | 6571 |
 
 **Best model: A (82.99%)**
+
+Note: Model A improved from 71.99% (after 1 epoch) to 82.99% after a second
+epoch of continued training, confirming the extra epoch helped.
