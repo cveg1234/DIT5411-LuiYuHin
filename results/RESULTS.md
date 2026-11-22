@@ -9,6 +9,7 @@
 |---|---|---|---|
 | A | 82.99% | 0.6432 | 6392 |
 | B | 0.07% | 22.2270 | 6571 |
+| C | 0.01% | 9.4775 | 6008 |
 
 **Best model: A (82.99%)**
 
@@ -16,3 +17,4 @@ Note: Model A improved from 71.99% (after 1 epoch) to 82.99% after a second
 epoch of continued training, confirming the extra epoch helped. Model B was
 also continued for a second epoch but stayed near random (0.05% -> 0.07%,
 loss 22.7 -> 22.2), confirming it had collapsed and could not be recovered.
+Model C (MLP baseline) also failed to learn (0.01%, loss ~ln(13065)=9.48).

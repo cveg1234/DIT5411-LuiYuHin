@@ -90,15 +90,17 @@ images). Test accuracy is measured on ~12 held-out samples per character.
 |---|---|---|---|
 | A | 82.99% | 0.6432 | 6392 |
 | B | 0.07% | 22.2270 | 6571 |
+| C | 0.01% | 9.4775 | 6008 |
 
 **Best model: A (82.99%)** — random guessing would be 0.01% (1/13,065), so the
-model learned genuine character-discriminative features. Model B (deep CNN)
-failed to converge on this dataset and is included as a negative comparison.
+model learned genuine character-discriminative features. Models B (deep CNN)
+and C (MLP baseline) failed to converge and are included as negative comparisons.
 
 Model A improved from 71.99% (after 1 epoch) to 82.99% after a second epoch of
 continued training, confirming the extra epoch helped. Model B was also
 continued for a second epoch but stayed near random (0.05% -> 0.07%, loss
 22.7 -> 22.2), confirming it had collapsed and could not be recovered.
+Model C (MLP baseline) also failed to learn (0.01%, loss ~ln(13065)=9.48).
 
 > Note: TensorFlow ≥2.11 has no native GPU support on Windows. Training was run
 > on Kaggle with a GPU; native Windows CPU is only suitable for the pilot run.

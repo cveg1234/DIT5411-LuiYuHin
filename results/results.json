@@ -19,6 +19,12 @@
       "test_accuracy": 0.0007,
       "test_loss": 22.2270,
       "training_time_s": 6571.0
+    },
+    {
+      "model": "C",
+      "test_accuracy": 0.0001,
+      "test_loss": 9.4775,
+      "training_time_s": 6008.0
     }
   ],
   "best_model": "A",
