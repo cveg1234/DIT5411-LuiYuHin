@@ -105,6 +105,17 @@ Model C (MLP baseline) also failed to learn (0.01%, loss ~ln(13065)=9.48).
 > Note: TensorFlow ≥2.11 has no native GPU support on Windows. Training was run
 > on Kaggle with a GPU; native Windows CPU is only suitable for the pilot run.
 
+### Trained models
+
+The trained `.keras` weights (all three models) are hosted on the
+[GitHub v1.0 release](https://github.com/cveg1234/DIT5411-LuiYuHin/releases/tag/v1.0):
+
+- `model_A.keras` (461 MB) — 82.99% test accuracy
+- `model_B.keras` (170 MB) — 0.07%
+- `model_C.keras` (659 MB) — 0.01%
+
+Download a file and load it with `keras.models.load_model('model_A.keras')`.
+
 ---
 
 ## 5. How to run
