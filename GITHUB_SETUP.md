@@ -43,5 +43,5 @@ git push
 - [ ] Source code files listed above
 - [ ] `results/RESULTS.md` with the measured accuracy table
 - [ ] `results/results.json` with full metrics
-- [ ] Colab notebook in `notebooks/`
+- [ ] Kaggle training notebook in `notebooks/`
 - [ ] Repo name `DIT5411-LuiYuHin`
