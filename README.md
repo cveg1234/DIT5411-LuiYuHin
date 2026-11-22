@@ -88,17 +88,17 @@ images). Test accuracy is measured on ~12 held-out samples per character.
 
 | Model | Test Accuracy | Test Loss | Time (s) |
 |---|---|---|---|
-| A | 82.99% | 0.6432 | 6392 |
+| A | 85.74% | 0.5363 | 6684 |
 | B | 0.07% | 22.2270 | 6571 |
 | C | 0.01% | 9.4775 | 6008 |
 
-**Best model: A (82.99%)** — random guessing would be 0.01% (1/13,065), so the
+**Best model: A (85.74%)** — random guessing would be 0.01% (1/13,065), so the
 model learned genuine character-discriminative features. Models B (deep CNN)
 and C (MLP baseline) failed to converge and are included as negative comparisons.
 
-Model A improved from 71.99% (after 1 epoch) to 82.99% after a second epoch of
-continued training, confirming the extra epoch helped. Model B was also
-continued for a second epoch but stayed near random (0.05% -> 0.07%, loss
+Model A improved from 71.99% (after 1 epoch) to 82.99% and then 85.74% after
+further epochs of continued training, confirming the extra epochs helped.
+Model B was also continued for a second epoch but stayed near random (0.05% -> 0.07%, loss
 22.7 -> 22.2), confirming it had collapsed and could not be recovered.
 Model C (MLP baseline) also failed to learn (0.01%, loss ~ln(13065)=9.48).
 
@@ -110,7 +110,7 @@ Model C (MLP baseline) also failed to learn (0.01%, loss ~ln(13065)=9.48).
 The trained `.keras` weights (all three models) are hosted on the
 [GitHub v1.0 release](https://github.com/cveg1234/DIT5411-LuiYuHin/releases/tag/v1.0):
 
-- `model_A.keras` (461 MB) — 82.99% test accuracy
+- `model_A.keras` (461 MB) — 82.99% on v1.0 (later continued to 85.74%)
 - `model_B.keras` (170 MB) — 0.07%
 - `model_C.keras` (659 MB) — 0.01%
 
