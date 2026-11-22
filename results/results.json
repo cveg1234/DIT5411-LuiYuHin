@@ -10,11 +10,17 @@
   "models": [
     {
       "model": "A",
-      "test_accuracy": 0.7199,
-      "test_loss": 1.1135,
-      "training_time_s": 6602.0
+      "test_accuracy": 0.8299,
+      "test_loss": 0.6432,
+      "training_time_s": 6392.0
+    },
+    {
+      "model": "B",
+      "test_accuracy": 0.0007,
+      "test_loss": 22.2270,
+      "training_time_s": 6571.0
     }
   ],
   "best_model": "A",
-  "best_accuracy": 0.7199
+  "best_accuracy": 0.8299
 }

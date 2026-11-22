@@ -88,10 +88,12 @@ images). Test accuracy is measured on ~12 held-out samples per character.
 
 | Model | Test Accuracy | Test Loss | Time (s) |
 |---|---|---|---|
-| A | 71.99% | 1.1135 | 6602 |
+| A | 82.99% | 0.6432 | 6392 |
+| B | 0.07% | 22.2270 | 6571 |
 
-**Best model: A (71.99%)** — random guessing would be 0.01% (1/13,065), so the
-model learned genuine character-discriminative features.
+**Best model: A (82.99%)** — random guessing would be 0.01% (1/13,065), so the
+model learned genuine character-discriminative features. Model B (deep CNN)
+failed to converge on this dataset and is included as a negative comparison.
 
 > Note: TensorFlow ≥2.11 has no native GPU support on Windows. Training was run
 > on Kaggle with a GPU; native Windows CPU is only suitable for the pilot run.
