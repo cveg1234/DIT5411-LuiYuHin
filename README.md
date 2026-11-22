@@ -77,7 +77,8 @@ All three models end with a `Dense(13_065, activation='softmax')` output layer.
 | **B — Deep CNN** | Four `Conv→Conv→Pool` blocks (32/64/128/256 filters), Flatten → Dense(512) → Dropout(0.3) → Output. No BatchNorm (unstable here). |
 | **C — MLP baseline** | Flatten → Dense(1024) → Dropout(0.2) → Dense(512) → Dropout(0.2) → Output. No convolutions — baseline showing what the CNN's spatial filters add. |
 
-All models use Adam (lr 1e-3) and categorical cross-entropy.
+Models A and B use Adam (lr 1e-3) and categorical cross-entropy; the MLP
+(Model C) used a lower lr of 3e-4 for stability.
 
 ---
 
