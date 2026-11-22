@@ -110,7 +110,7 @@ Model C (MLP baseline) also failed to learn (0.01%, loss ~ln(13065)=9.48).
 The trained `.keras` weights (all three models) are hosted on the
 [GitHub v1.0 release](https://github.com/cveg1234/DIT5411-LuiYuHin/releases/tag/v1.0):
 
-- `model_A.keras` (461 MB) — 82.99% on v1.0 (later continued to 85.74%)
+- `model_A.keras` (461 MB) — 85.74% test accuracy
 - `model_B.keras` (170 MB) — 0.07%
 - `model_C.keras` (659 MB) — 0.01%
 
