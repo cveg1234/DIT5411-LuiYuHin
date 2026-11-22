@@ -137,7 +137,7 @@ python predict.py --image sample.png --model results/model_A.keras
 ```
 
 For full training on a GPU, use **`notebooks/DIT5411_Kaggle.ipynb`**: enable the
-P100 GPU, run the setup and dataset cells, then train each model in its own cell.
+T4 GPU, run the setup and dataset cells, then train each model in its own cell.
 Checkpoints are saved under `results/checkpoints/` so a run can be continued with
 `--resume`.
 
