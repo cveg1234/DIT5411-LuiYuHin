@@ -6,7 +6,7 @@ The project folder is `DIT5411-LuiYuHin`. The repository must be named
 ## 1. Initialise locally
 
 ```bash
-cd "C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin"
+cd DIT5411-LuiYuHin
 git init
 git add README.md config.py dataset.py augmentation.py generators.py models.py train.py predict.py requirements.txt .gitignore notebooks/
 git commit -m "Initial DIT5411 character recognition project"

@@ -5,8 +5,8 @@ import sys
 import zipfile
 
 p = argparse.ArgumentParser()
-p.add_argument('--zip', default=r'C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin\data\handwritting_data_all\all_data.zip')
-p.add_argument('--dest', default=r'C:\Users\brend\OneDrive\Desktop\hw\DIT5411-LuiYuHin\data\cleaned_data')
+p.add_argument('--zip', default='data/handwritting_data_all/all_data.zip')
+p.add_argument('--dest', default='data/cleaned_data')
 args = p.parse_args()
 
 ZIP, DEST = args.zip, args.dest
